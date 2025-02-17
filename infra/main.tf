@@ -56,21 +56,25 @@ resource "azurerm_linux_web_app" "webapp" {
   }
 }
 
-# Obtener los secretos de GitHub
-data "github_actions_secret" "db_name" {
-  repository = "tomasyoel/automatizacionloopify"
-  secret_name = "DB_NAME"
+# Obtener los secretos de GitHub como recursos
+resource "github_actions_secret" "db_name" {
+  repository      = "tomasyoel/automatizacionloopify"
+  secret_name     = "DB_NAME"
+  plaintext_value = "bdloop" 
 }
 
-data "github_actions_secret" "db_username" {
-  repository = "tomasyoel/automatizacionloopify"
-  secret_name = "DB_USERNAME"
+resource "github_actions_secret" "db_username" {
+  repository      = "tomasyoel/automatizacionloopify"
+  secret_name     = "DB_USERNAME"
+  plaintext_value = "bdloop" 
 }
 
-data "github_actions_secret" "db_password" {
-  repository = "tomasyoel/automatizacionloopify"
-  secret_name = "DB_PASSWORD"
+resource "github_actions_secret" "db_password" {
+  repository      = "tomasyoel/automatizacionloopify"
+  secret_name     = "DB_PASSWORD"
+  plaintext_value = "loopifyplus" 
 }
+
 
 # Crear el Servidor SQL en Azure
 resource "azurerm_mssql_server" "sqlsrv" {
