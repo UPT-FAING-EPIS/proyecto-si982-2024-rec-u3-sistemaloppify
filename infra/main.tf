@@ -23,28 +23,9 @@ variable "sqladmin_password" {
     description = "Administrator password for server"
 }
 
-variable "db_name" {
-  type = string
-  description = "Database name"
-}
-
-variable "db_username" {
-  type = string
-  description = "Database username"
-}
-
-variable "db_password" {
-  type = string
-  description = "Database password"
-}
-
 provider "azurerm" {
   features {}
   subscription_id = var.suscription_id
-}
-
-provider "github" {
-  token = var.github_token
 }
 
 # Generate a random integer to create a globally unique name
@@ -56,7 +37,7 @@ resource "random_integer" "ri" {
 # Create the resource group
 resource "azurerm_resource_group" "rg" {
   name     = "upt-arg-${random_integer.ri.result}"
-  location = "centralus"
+  location = "eastus"
 }
 
 # Create the Linux App Service Plan
@@ -70,7 +51,7 @@ resource "azurerm_service_plan" "appserviceplan" {
 
 # Create the web app, pass in the App Service Plan ID
 resource "azurerm_linux_web_app" "webapp" {
-  name                  = "upt-proj-${random_integer.ri.result}"
+  name                  = "upt-awa-${random_integer.ri.result}"
   location              = azurerm_resource_group.rg.location
   resource_group_name   = azurerm_resource_group.rg.name
   service_plan_id       = azurerm_service_plan.appserviceplan.id
@@ -80,7 +61,7 @@ resource "azurerm_linux_web_app" "webapp" {
     minimum_tls_version = "1.2"
     always_on = false
     application_stack {
-      docker_image_name = "kyans8/loop:latest"
+      docker_image_name = "kyans8/shorten:latest"
       docker_registry_url = "https://index.docker.io"      
     }
   }
@@ -103,26 +84,7 @@ resource "azurerm_mssql_firewall_rule" "sqlaccessrule" {
 }
 
 resource "azurerm_mssql_database" "sqldb" {
-  name      = "loop"
+  name      = "shorten"
   server_id = azurerm_mssql_server.sqlsrv.id
   sku_name = "Free"
-}
-
-# Crear los secretos de GitHub
-resource "github_actions_secret" "db_name" {
-  repository    = "tomasyoel/automatizacionloopify"
-  secret_name   = "DB_NAME"
-  plaintext_value = bdloop
-}
-
-resource "github_actions_secret" "db_username" {
-  repository    = "tomasyoel/automatizacionloopify"
-  secret_name   = "DB_USERNAME"
-  plaintext_value = bdloop
-}
-
-resource "github_actions_secret" "db_password" {
-  repository    = "tomasyoel/automatizacionloopify"
-  secret_name   = "DB_PASSWORD"
-  plaintext_value = loopifyplus
 }
