@@ -9,28 +9,38 @@ terraform {
 }
 
 variable "suscription_id" {
-  type        = string
-  description = "Azure subscription id"
+    type = string
+    description = "Azure subscription id"
+}
+
+variable "sqladmin_username" {
+    type = string
+    description = "Administrator username for server"
+}
+
+variable "sqladmin_password" {
+    type = string
+    description = "Administrator password for server"
 }
 
 provider "azurerm" {
-  features        {}
+  features {}
   subscription_id = var.suscription_id
 }
 
-# Generar un número aleatorio para crear nombres únicos
+# Generate a random integer to create a globally unique name
 resource "random_integer" "ri" {
   min = 100
   max = 999
 }
 
-# Crear el Resource Group
+# Create the resource group
 resource "azurerm_resource_group" "rg" {
   name     = "upt-arg-${random_integer.ri.result}"
   location = "centralus"
 }
 
-# Crear el App Service Plan para Linux
+# Create the Linux App Service Plan
 resource "azurerm_service_plan" "appserviceplan" {
   name                = "upt-asp-${random_integer.ri.result}"
   location            = azurerm_resource_group.rg.location
@@ -39,54 +49,33 @@ resource "azurerm_service_plan" "appserviceplan" {
   sku_name            = "F1"
 }
 
-# Crear la Web App
+# Create the web app, pass in the App Service Plan ID
 resource "azurerm_linux_web_app" "webapp" {
-  name                  = "upt-awa-${random_integer.ri.result}"
+  name                  = "upt-proj-${random_integer.ri.result}"
   location              = azurerm_resource_group.rg.location
   resource_group_name   = azurerm_resource_group.rg.name
   service_plan_id       = azurerm_service_plan.appserviceplan.id
   depends_on            = [azurerm_service_plan.appserviceplan]
+  //https_only            = true
   site_config {
     minimum_tls_version = "1.2"
-    always_on           = false
+    always_on = false
     application_stack {
-      docker_image_name   = "kyans8/shorten:latest"
-      docker_registry_url = "https://index.docker.io"
+      docker_image_name = "kyans8/loop:latest"
+      docker_registry_url = "https://index.docker.io"      
     }
   }
 }
 
-# Obtener los secretos de GitHub como recursos
-resource "github_actions_secret" "db_name" {
-  repository      = "tomasyoel/automatizacionloopify"
-  secret_name     = "DB_NAME"
-  plaintext_value = "bdloop" 
-}
-
-resource "github_actions_secret" "db_username" {
-  repository      = "tomasyoel/automatizacionloopify"
-  secret_name     = "DB_USERNAME"
-  plaintext_value = "bdloop" 
-}
-
-resource "github_actions_secret" "db_password" {
-  repository      = "tomasyoel/automatizacionloopify"
-  secret_name     = "DB_PASSWORD"
-  plaintext_value = "loopifyplus" 
-}
-
-
-# Crear el Servidor SQL en Azure
 resource "azurerm_mssql_server" "sqlsrv" {
   name                         = "upt-dbs-${random_integer.ri.result}"
   resource_group_name          = azurerm_resource_group.rg.name
   location                     = azurerm_resource_group.rg.location
   version                      = "12.0"
-  administrator_login          = data.github_actions_secret.db_username.secret_value
-  administrator_login_password = data.github_actions_secret.db_password.secret_value
+  administrator_login          = var.sqladmin_username
+  administrator_login_password = var.sqladmin_password
 }
 
-# Crear la regla de firewall para acceso público
 resource "azurerm_mssql_firewall_rule" "sqlaccessrule" {
   name             = "PublicAccess"
   server_id        = azurerm_mssql_server.sqlsrv.id
@@ -94,9 +83,8 @@ resource "azurerm_mssql_firewall_rule" "sqlaccessrule" {
   end_ip_address   = "255.255.255.255"
 }
 
-# Crear la base de datos en el servidor SQL
 resource "azurerm_mssql_database" "sqldb" {
-  name      = data.github_actions_secret.db_name.secret_value
+  name      = "loop"
   server_id = azurerm_mssql_server.sqlsrv.id
-  sku_name  = "Free"
+  sku_name = "Free"
 }
