@@ -1,0 +1,22 @@
+﻿@model IEnumerable<dynamic>
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4" style="color: #00A79D;">Resumen de Ventas</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Negocio</th>
+                <th>Total Ventas (S/)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Negocio</td>
+                    <td>@item.TotalVentas</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

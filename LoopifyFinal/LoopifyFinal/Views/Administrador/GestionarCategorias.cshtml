@@ -1,0 +1,123 @@
+﻿@model List<LoopifyFinal.Models.Categoria>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4" style="color: #00A79D;">Gestión de Categorías</h2>
+
+    <!-- Botón para crear nueva categoría -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#crearCategoriaModal">
+            <i class="bi bi-plus-circle"></i> Añadir Categoría
+        </button>
+    </div>
+
+    <!-- Tabla de categorías -->
+    @if (Model != null && Model.Any())
+    {
+        <table class="table table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int index = 1; // Inicializa el índice para numeración correlativa
+                }
+                @foreach (var categoria in Model.OrderBy(c => c.Id)) // Ordena por ID
+                {
+                    <tr>
+                        <td>@index</td> <!-- Muestra el índice correlativo -->
+                        <td>@categoria.Nombre</td>
+                        <td>
+                            <button class="btn btn-warning btn-sm text-white" data-bs-toggle="modal"
+                                    data-bs-target="#editarCategoriaModal"
+                                    data-id="@categoria.Id"
+                                    data-nombre="@categoria.Nombre">
+                                <i class="bi bi-pencil"></i> Editar
+                            </button>
+                            <form method="post" action="/Administrador/EliminarCategoria" style="display: inline;">
+                                <input type="hidden" name="id" value="@categoria.Id" />
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar esta categoría?');">
+                                    <i class="bi bi-trash"></i> Eliminar
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    index++; // Incrementa el índice
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-info text-center">No hay categorías registradas.</div>
+    }
+</div>
+
+<!-- Modal: Crear Categoría -->
+<div class="modal fade" id="crearCategoriaModal" tabindex="-1" aria-labelledby="crearCategoriaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="crearCategoriaLabel">Añadir Categoría</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="/Administrador/CrearCategoria">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="nombreCategoria" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombreCategoria" name="nombre" required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Editar Categoría -->
+<div class="modal fade" id="editarCategoriaModal" tabindex="-1" aria-labelledby="editarCategoriaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editarCategoriaLabel">Editar Categoría</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="/Administrador/EditarCategoria">
+                <input type="hidden" id="editarCategoriaId" name="id" />
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="editarNombreCategoria" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="editarNombreCategoria" name="nombre" required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    var editarCategoriaModal = document.getElementById('editarCategoriaModal');
+    editarCategoriaModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var id = button.getAttribute('data-id');
+        var nombre = button.getAttribute('data-nombre');
+
+        var modalId = editarCategoriaModal.querySelector('#editarCategoriaId');
+        var modalNombre = editarCategoriaModal.querySelector('#editarNombreCategoria');
+
+        modalId.value = id;
+        modalNombre.value = nombre;
+    });
+</script>
