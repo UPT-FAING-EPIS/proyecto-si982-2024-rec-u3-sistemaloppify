@@ -23,9 +23,28 @@ variable "sqladmin_password" {
     description = "Administrator password for server"
 }
 
+variable "db_name" {
+  type = string
+  description = "Database name"
+}
+
+variable "db_username" {
+  type = string
+  description = "Database username"
+}
+
+variable "db_password" {
+  type = string
+  description = "Database password"
+}
+
 provider "azurerm" {
   features {}
   subscription_id = var.suscription_id
+}
+
+provider "github" {
+  token = var.github_token
 }
 
 # Generate a random integer to create a globally unique name
@@ -87,4 +106,23 @@ resource "azurerm_mssql_database" "sqldb" {
   name      = "loop"
   server_id = azurerm_mssql_server.sqlsrv.id
   sku_name = "Free"
+}
+
+# Crear los secretos de GitHub
+resource "github_actions_secret" "db_name" {
+  repository    = "tomasyoel/automatizacionloopify"
+  secret_name   = "DB_NAME"
+  plaintext_value = bdloop
+}
+
+resource "github_actions_secret" "db_username" {
+  repository    = "tomasyoel/automatizacionloopify"
+  secret_name   = "DB_USERNAME"
+  plaintext_value = bdloop
+}
+
+resource "github_actions_secret" "db_password" {
+  repository    = "tomasyoel/automatizacionloopify"
+  secret_name   = "DB_PASSWORD"
+  plaintext_value = loopifyplus
 }
