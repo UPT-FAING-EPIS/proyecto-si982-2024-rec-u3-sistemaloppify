@@ -30,6 +30,10 @@ jobs:
           choco install visualstudio2019buildtools -y
           choco install nuget.commandline -y
 
+      - name: Instalar Visual Studio Web Build Tools
+        run: |
+          choco install visualstudio2019-workload-webbuildtools -y
+
       - name: Restaurar dependencias
         run: |
           cd LoopifyFinal
