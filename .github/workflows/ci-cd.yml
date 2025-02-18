@@ -37,12 +37,13 @@ jobs:
 
       - name: Compilar la solución
         run: |
-          "C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/MSBuild/Current/Bin/MSBuild.exe" LoopifyFinal.sln /p:Configuration=Release /t:Rebuild /p:Platform="Any CPU"
+          cd LoopifyFinal
+          & 'C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/MSBuild/Current/Bin/MSBuild.exe' LoopifyFinal.sln /p:Configuration="Release" /t:Rebuild /p:Platform="Any CPU"
 
       - name: Publicar la aplicación
         run: |
           cd LoopifyFinal/LoopifyFinal
-          "C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/MSBuild/Current/Bin/MSBuild.exe" LoopifyFinal.csproj /p:Configuration=Release /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageLocation=../../publish
+          & "C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/MSBuild/Current/Bin/MSBuild.exe" LoopifyFinal.csproj /p:Configuration=Release /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageLocation=../../publish
 
   deploy:
     runs-on: windows-latest
