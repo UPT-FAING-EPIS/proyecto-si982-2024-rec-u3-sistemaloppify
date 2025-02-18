@@ -58,7 +58,6 @@ resource "azurerm_windows_web_app" "webapp" {
 
   site_config {
   ftps_state = "Disabled"
-  always_on  = true
 }
 
 
