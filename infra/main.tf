@@ -70,20 +70,6 @@ resource "azurerm_windows_web_app" "webapp" {
 
 }
 
-# Continuous Deployment with GitHub
-resource "azurerm_web_app_source_control" "sourcecontrol" {
-  app_id             = azurerm_windows_web_app.webapp.id
-  repo_url           = "https://github.com/tomasyoel/automatizacionloopify"
-  branch             = "main"
-  use_manual_integration = true
-  github_action_configuration {
-    oauth_token     = "YOUR_GITHUB_TOKEN"
-    organization    = "tomasyoel"
-    repository      = "automatizacionloopify"
-    branch          = "main"
-  }
-}
-
 # SQL Server
 resource "azurerm_mssql_server" "sqlsrv" {
   name                         = "loopify-sql-${random_integer.ri.result}"
