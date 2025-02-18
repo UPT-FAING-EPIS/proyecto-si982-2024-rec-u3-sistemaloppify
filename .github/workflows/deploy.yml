@@ -47,31 +47,60 @@ jobs:
       - name: Terraform Apply
         run: cd infra && terraform apply -auto-approve main.tfplan
 
-      # Terramaid Setup and Run
+      # # Terramaid Setup and Run
+      # - name: Outputs
+      #   id: vars
+      #   run: |
+      #     echo "terramaid_version=$(curl -s https://api.github.com/repos/RoseSecurity/Terramaid/releases/latest | grep tag_name | cut -d '\"' -f 4)" >> $GITHUB_OUTPUT
+      #     case "${{ runner.arch }}" in
+      #     "X64" )
+      #       echo "arch=x86_64" >> $GITHUB_OUTPUT
+      #       ;;
+      #     "ARM64" )
+      #       echo "arch=arm64" >> $GITHUB_OUTPUT
+      #       ;;
+      #     esac
+
+      # - name: Setup Go
+      #   uses: actions/setup-go@v5
+      #   with:
+      #     go-version: 'stable'
+
+      # - name: Setup Terramaid
+      #   run: |
+      #     curl -L -o /tmp/terramaid.tar.gz "https://github.com/RoseSecurity/Terramaid/releases/download/${{ steps.vars.outputs.terramaid_version }}/Terramaid_Linux_${{ steps.vars.outputs.arch }}.tar.gz"
+      #     tar -xzvf /tmp/terramaid.tar.gz -C /tmp
+      #     mv -v /tmp/Terramaid /usr/local/bin/terramaid
+      #     chmod +x /usr/local/bin/terramaid
+
+      # # Terramaid Setup and Run
       - name: Outputs
         id: vars
         run: |
-          echo "terramaid_version=$(curl -s https://api.github.com/repos/RoseSecurity/Terramaid/releases/latest | grep tag_name | cut -d '\"' -f 4)" >> $GITHUB_OUTPUT
-          case "${{ runner.arch }}" in
-          "X64" )
-            echo "arch=x86_64" >> $GITHUB_OUTPUT
-            ;;
-          "ARM64" )
-            echo "arch=arm64" >> $GITHUB_OUTPUT
-            ;;
-          esac
+          # Obtener versión sin 'v' al inicio
+          version=$(curl -s https://api.github.com/repos/RoseSecurity/Terramaid/releases/latest | grep tag_name | cut -d '"' -f 4 | sed 's/v//')
+          echo "terramaid_version=$version" >> $GITHUB_OUTPUT
 
-      - name: Setup Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: 'stable'
+          # Detectar arquitectura correctamente
+          arch=$(uname -m)
+          if [ "$arch" = "x86_64" ]; then
+            echo "arch=x86_64" >> $GITHUB_OUTPUT
+          elif [ "$arch" = "aarch64" ]; then
+            echo "arch=arm64" >> $GITHUB_OUTPUT
+          else
+            echo "Unsupported architecture: $arch"
+            exit 1
+          fi
 
       - name: Setup Terramaid
         run: |
-          curl -L -o /tmp/terramaid.tar.gz "https://github.com/RoseSecurity/Terramaid/releases/download/${{ steps.vars.outputs.terramaid_version }}/Terramaid_Linux_${{ steps.vars.outputs.arch }}.tar.gz"
+          # Descargar y configurar Terramaid
+          echo "Descargando Terramaid versión ${{ steps.vars.outputs.terramaid_version }} para ${{ steps.vars.outputs.arch }}"
+          curl -L -o /tmp/terramaid.tar.gz "https://github.com/RoseSecurity/Terramaid/releases/download/v${{ steps.vars.outputs.terramaid_version }}/Terramaid_Linux_${{ steps.vars.outputs.arch }}.tar.gz"
           tar -xzvf /tmp/terramaid.tar.gz -C /tmp
-          mv -v /tmp/Terramaid /usr/local/bin/terramaid
-          chmod +x /usr/local/bin/terramaid
+          sudo mv -v /tmp/Terramaid /usr/local/bin/terramaid
+          sudo chmod +x /usr/local/bin/terramaid
+      
 
       - name: Run Terramaid
         run: |
