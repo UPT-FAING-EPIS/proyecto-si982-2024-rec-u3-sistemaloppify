@@ -1,0 +1,28 @@
+﻿@model IEnumerable<LoopifyFinal.Models.Negocio>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container mt-4">
+    <h2 class="text-center mb-4" style="color: #00A79D;">Gestión de Negocios</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Dirección</th>
+                <th>Propietario</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var negocio in Model)
+            {
+                <tr>
+                    <td>@negocio.Nombre</td>
+                    <td>@negocio.Descripcion</td>
+                    <td>@negocio.Direccion</td>
+                    <td>@negocio.Usuario.Nombre</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

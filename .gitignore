@@ -17,3 +17,6 @@ artifacts/
 # Otros archivos innecesarios
 *.log
 .DS_Store
+*.dbmdl
+*.log
+*.sdf
