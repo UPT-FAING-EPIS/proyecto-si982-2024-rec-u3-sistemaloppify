@@ -5,13 +5,13 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /app
 
 # Copiar el archivo de solución y los proyectos
-COPY LoopifyFinal/*.csproj ./LoopifyFinal/
+COPY LoopifyFinal/LoopifyFinal/*.csproj ./LoopifyFinal/
 WORKDIR /app/LoopifyFinal
 RUN dotnet restore
 
 # Copiar el resto de la aplicación y compilar
-COPY LoopifyFinal/. .
-RUN dotnet publish -c Release -o out
+COPY LoopifyFinal/LoopifyFinal/. ./LoopifyFinal/
+RUN dotnet publish -c Release -o /app/publish
 
 # Utilizar la imagen base de .NET Runtime 9.0
 FROM mcr.microsoft.com/dotnet/aspnet:9.0-alpine AS runtime
@@ -28,4 +28,3 @@ COPY --from=build /app/LoopifyFinal/out .
 
 # Definir el comando de entrada para ejecutar la aplicación
 ENTRYPOINT ["dotnet", "LoopifyFinal.dll"]
-```

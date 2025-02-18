@@ -61,7 +61,7 @@ resource "azurerm_linux_web_app" "webapp" {
     minimum_tls_version = "1.2"
     always_on = false
     application_stack {
-      docker_image_name = "kyans8/projecto:latest"
+      docker_image_name = "kyans8/bdloop:latest"
       docker_registry_url = "https://index.docker.io"      
     }
   }
@@ -84,7 +84,7 @@ resource "azurerm_mssql_firewall_rule" "sqlaccessrule" {
 }
 
 resource "azurerm_mssql_database" "sqldb" {
-  name      = "projecto"
+  name      = "bdloop"
   server_id = azurerm_mssql_server.sqlsrv.id
   sku_name = "Free"
 }
