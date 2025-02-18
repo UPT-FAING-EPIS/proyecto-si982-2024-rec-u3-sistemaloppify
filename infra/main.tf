@@ -58,6 +58,7 @@ resource "azurerm_windows_web_app" "webapp" {
 
   site_config {
   ftps_state = "Disabled"
+  always_on  = false
 }
 
 
@@ -73,7 +74,7 @@ resource "azurerm_windows_web_app" "webapp" {
 resource "azurerm_mssql_server" "sqlsrv" {
   name                         = "loopify-sql-${random_integer.ri.result}"
   resource_group_name          = azurerm_resource_group.rg.name
-  location                     = azurerm_resource_group.rg.location
+  location                     = "centralus"
   version                      = "12.0"
   administrator_login          = var.sqladmin_username
   administrator_login_password = var.sqladmin_password
