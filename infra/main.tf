@@ -57,11 +57,10 @@ resource "azurerm_windows_web_app" "webapp" {
   service_plan_id     = azurerm_service_plan.appserviceplan.id
 
   site_config {
-    scm_type              = "LocalGit"
-    ftps_state            = "Disabled"
-    always_on             = true
-    windows_fx_version    = "DOTNETFRAMEWORK|v4.8"
-  }
+  ftps_state = "Disabled"
+  always_on  = true
+}
+
 
   identity {
     type = "SystemAssigned"
@@ -69,9 +68,6 @@ resource "azurerm_windows_web_app" "webapp" {
 
   https_only = true
 
-  lifecycle {
-    ignore_changes = [outbound_ip_addresses, possible_outbound_ip_addresses]
-  }
 }
 
 # Continuous Deployment with GitHub
