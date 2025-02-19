@@ -1,67 +1,67 @@
-# name: CI/CD para LoopifyFinal
+name: CI/CD para LoopifyFinal
 
-# env:
-#   AZURE_WEBAPP_NAME: loopify               # Nombre de tu App Service
-#   DOTNET_VERSION: '4.8'
+env:
+  AZURE_WEBAPP_NAME: loopify               # Nombre de tu App Service
+  DOTNET_VERSION: '4.8'
 
-# on:
-#   push:
-#     branches:
-#       - main
-#     paths:
-#       - 'LoopifyFinal/**'
-#       - '.github/workflows/**'
-#   workflow_dispatch:
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'LoopifyFinal/**'
+      - '.github/workflows/**'
+  workflow_dispatch:
 
-# permissions:
-#   contents: read
+permissions:
+  contents: read
 
-# jobs:
-#   build:
-#     runs-on: windows-latest
-#     steps:
-#       - name: Checkout del repositorio
-#         uses: actions/checkout@v4
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
       
-#       - name: Instalar .NET Framework y MSBuild
-#         run: |
-#           choco install microsoft-build-tools -y
-#           choco install netfx-4.8-devpack -y
-#           choco install visualstudio2019buildtools -y
-#           choco install nuget.commandline -y
+      - name: Instalar .NET Framework y MSBuild
+        run: |
+          choco install microsoft-build-tools -y
+          choco install netfx-4.8-devpack -y
+          choco install visualstudio2019buildtools -y
+          choco install nuget.commandline -y
 
-#       - name: Instalar Visual Studio Web Build Tools
-#         run: |
-#           choco install visualstudio2022-workload-webbuildtools -y
+      - name: Instalar Visual Studio Web Build Tools
+        run: |
+          choco install visualstudio2022-workload-webbuildtools -y
 
-#       - name: Restaurar dependencias
-#         run: |
-#           cd LoopifyFinal
-#           nuget restore LoopifyFinal.sln
+      - name: Restaurar dependencias
+        run: |
+          cd LoopifyFinal
+          nuget restore LoopifyFinal.sln
 
-#       - name: Verificar versiones de Visual Studio
-#         run: |
-#           & "C:/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe" -all
+      - name: Verificar versiones de Visual Studio
+        run: |
+          & "C:/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe" -all
             
-#       - name: Compilar solución
-#         run: |
-#           cd LoopifyFinal
-#           $MSBUILD_PATH = & "C:/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe" -latest -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe
-#           & $MSBUILD_PATH LoopifyFinal.sln /p:Configuration=Release /p:Platform="Any CPU"
-#         shell: pwsh
+      - name: Compilar solución
+        run: |
+          cd LoopifyFinal
+          $MSBUILD_PATH = & "C:/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe" -latest -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe
+          & $MSBUILD_PATH LoopifyFinal.sln /p:Configuration=Release /p:Platform="Any CPU"
+        shell: pwsh
               
-#   deploy:
-#     runs-on: windows-latest
-#     needs: build
-#     environment:
-#       name: 'Production'
-#       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+  deploy:
+    runs-on: windows-latest
+    needs: build
+    environment:
+      name: 'Production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
-#     steps:
-#       - name: Checkout del repositorio
-#         uses: actions/checkout@v4
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
 
-#       - name: Configurar Implementación Continua en Azure
-#         run: |
-#           az webapp deployment source config --name ${{ secrets.AZURE_WEBAPP_NAME }} --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --repo-url https://github.com/${{ github.repository }} --branch main --manual-integration
-#         shell: pwsh
+      - name: Configurar Implementación Continua en Azure
+        run: |
+          az webapp deployment source config --name ${{ secrets.AZURE_WEBAPP_NAME }} --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --repo-url https://github.com/${{ github.repository }} --branch main --manual-integration
+        shell: pwsh
