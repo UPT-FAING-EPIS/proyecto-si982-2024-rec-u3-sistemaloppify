@@ -93,10 +93,10 @@ jobs:
           az webapp config appsettings set --name ${{ secrets.AZURE_WEBAPP_NAME }} --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --settings SCM_DO_BUILD_DURING_DEPLOYMENT=true PROJECT=LoopifyFinal
         shell: pwsh
       
-      
-      - name: Sincronizar implementación en Azure
+      - name: Sincronizar implementación continua en Azure
         run: |
-          az webapp deployment source sync --name ${{ secrets.AZURE_WEBAPP_NAME }} \
+          az webapp deployment source sync --name ${{ secrets.AZURE_WEBAPP_NAME }} `
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }}
         shell: pwsh
+
       
