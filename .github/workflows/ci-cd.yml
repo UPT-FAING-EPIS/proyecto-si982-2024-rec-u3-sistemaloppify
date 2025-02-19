@@ -68,6 +68,6 @@ jobs:
 
       - name: Actualizar implementación continua en Azure
         run: |
-          az webapp deployment source update --name ${{ secrets.AZURE_WEBAPP_NAME }} --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --repo-url https://github.com/${{ github.repository }} --branch main --manual-integration
+          az webapp deployment source sync --name ${{ secrets.AZURE_WEBAPP_NAME }} --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --repo-url https://github.com/${{ github.repository }} --branch main --manual-integration
         shell: pwsh
       
