@@ -81,18 +81,20 @@ jobs:
       - name: Configurar implementación continua en Azure (si es necesario)
         if: env.CONFIG_NEEDED == 'true'
         run: |
-          az webapp deployment source config --name ${{ secrets.AZURE_WEBAPP_NAME }} \
+          az webapp deployment source config --name ${{ secrets.AZURE_WEBAPP_NAME }} `
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
             --repo-url https://github.com/${{ github.repository }} \
             --branch main \
             --manual-integration
         shell: pwsh
+    
       
       - name: Configurar carpeta base en Azure
         run: |
-          az webapp config appsettings set --name ${{ secrets.AZURE_WEBAPP_NAME }} --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --settings SCM_DO_BUILD_DURING_DEPLOYMENT=true PROJECT=LoopifyFinal
+          az webapp config appsettings set --name ${{ secrets.AZURE_WEBAPP_NAME }} --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --settings SCM_DO_BUILD_DURING_DEPLOYMENT=true PROJECT=LoopifyFinal/LoopifyFinal
         shell: pwsh
-      
+
+            
       - name: Sincronizar implementación continua en Azure
         run: |
           az webapp deployment source sync --name ${{ secrets.AZURE_WEBAPP_NAME }} `
