@@ -60,6 +60,11 @@ jobs:
     steps:
       - name: Checkout del repositorio
         uses: actions/checkout@v4
+      
+      - name: Iniciar sesión en Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Configurar Implementación Continua en Azure
         run: |
