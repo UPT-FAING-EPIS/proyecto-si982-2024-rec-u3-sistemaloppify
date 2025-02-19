@@ -32,26 +32,18 @@ jobs:
 
       - name: Instalar Visual Studio Web Build Tools
         run: |
-          choco install visualstudio2019-workload-webbuildtools -y
+          choco install visualstudio2022-workload-webbuildtools -y
 
       - name: Restaurar dependencias
         run: |
           cd LoopifyFinal
           nuget restore LoopifyFinal.sln
 
-      - name: Compilar la solución
+      - name: Compilar y publicar con el perfil de Azure
         run: |
           cd LoopifyFinal
-          & 'C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/MSBuild/Current/Bin/MSBuild.exe' LoopifyFinal.sln /p:Configuration="Release" /t:Rebuild /p:Platform="Any CPU"
-        
-      - name: Publicar la aplicación
-        run: |
-          cd LoopifyFinal
-          & "C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/MSBuild/Current/Bin/MSBuild.exe" LoopifyFinal.sln /p:Configuration=Release /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageLocation=publish /p:Platform="Any CPU"
-         
-  
-   
-  
+          & "C:/Program Files/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/MSBuild.exe" LoopifyFinal.sln /p:DeployOnBuild=true /p:PublishProfile=Properties/PublishProfiles/Azure.pubxml /p:Configuration=Release /p:Platform="Any CPU"
+
   deploy:
     runs-on: windows-latest
     needs: build
@@ -68,4 +60,4 @@ jobs:
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: ./LoopifyFinal/LoopifyFinal/publish
+          package: ./LoopifyFinal
