@@ -39,20 +39,17 @@ jobs:
           cd LoopifyFinal
           nuget restore LoopifyFinal.sln
 
+      - name: Verificar versiones de Visual Studio
+        run: |
+          & "C:/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe" -all
+            
       - name: Compilar y publicar con perfil de Azure
         run: |
           cd LoopifyFinal
-          & "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe" LoopifyFinal.sln /p:DeployOnBuild=true /p:PublishProfile=Properties/PublishProfiles/Azure.pubxml /p:Configuration=Release /p:Platform="Any CPU"
-
-      - name: Verificar instalación de MSBuild
-        run: |
-          dir "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\"
-        
-      - name: Publicar la aplicación
-        run: |
-          cd LoopifyFinal
-          & "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe" LoopifyFinal.sln /p:Configuration=Release /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageLocation=publish /p:Platform="Any CPU"
-         
+          $MSBUILD_PATH = & "C:/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe" -latest -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe
+          & $MSBUILD_PATH LoopifyFinal.sln /p:DeployOnBuild=true /p:PublishProfile=Properties/PublishProfiles/Azure.pubxml /p:Configuration=Release /p:Platform="Any CPU"
+        shell: pwsh
+              
   
    
   
