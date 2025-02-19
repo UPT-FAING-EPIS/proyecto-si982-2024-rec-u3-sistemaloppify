@@ -1,7 +1,7 @@
 name: CI/CD para LoopifyFinal
 
 env:
-  AZURE_WEBAPP_NAME: loopify-app-631               # Nombre de tu App Service
+  AZURE_WEBAPP_NAME: loopify               # Nombre de tu App Service
   DOTNET_VERSION: '4.8'
 
 on:
