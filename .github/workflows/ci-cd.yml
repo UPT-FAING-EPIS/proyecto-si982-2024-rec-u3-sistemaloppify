@@ -88,10 +88,11 @@ jobs:
             --manual-integration
         shell: pwsh
       
-      - name: Configurar carpeta base en Azure
+      - name: Configurar la carpeta base en Azure
         run: |
-          az webapp config set --name ${{ secrets.AZURE_WEBAPP_NAME }} --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --php-version Off --net-framework-version v4.8 --virtual-application "/LoopifyFinal"
+          az webapp config virtual-application set --name ${{ secrets.AZURE_WEBAPP_NAME }} --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --virtual-apps '[{"virtualPath":"/", "physicalPath":"site\\wwwroot\\LoopifyFinal", "preload":true}]'
         shell: pwsh
+      
 
             
       - name: Sincronizar implementación continua en Azure
