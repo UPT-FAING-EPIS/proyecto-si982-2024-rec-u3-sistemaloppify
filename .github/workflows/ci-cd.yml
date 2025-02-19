@@ -43,16 +43,13 @@ jobs:
         run: |
           & "C:/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe" -all
             
-      - name: Compilar y publicar con perfil de Azure
+      - name: Compilar solución
         run: |
           cd LoopifyFinal
           $MSBUILD_PATH = & "C:/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe" -latest -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe
-          & $MSBUILD_PATH LoopifyFinal.sln /p:DeployOnBuild=true /p:PublishProfile=Properties/PublishProfiles/Azure.pubxml /p:Configuration=Release /p:Platform="Any CPU"
+          & $MSBUILD_PATH LoopifyFinal.sln /p:Configuration=Release /p:Platform="Any CPU"
         shell: pwsh
               
-  
-   
-  
   deploy:
     runs-on: windows-latest
     needs: build
@@ -64,9 +61,7 @@ jobs:
       - name: Checkout del repositorio
         uses: actions/checkout@v4
 
-      - name: Desplegar a Azure Web App
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: ./LoopifyFinal/LoopifyFinal/publish
+      - name: Configurar Implementación Continua en Azure
+        run: |
+          az webapp deployment source config --name ${{ secrets.AZURE_WEBAPP_NAME }} --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --repo-url https://github.com/${{ github.repository }} --branch main --manual-integration
+        shell: pwsh
