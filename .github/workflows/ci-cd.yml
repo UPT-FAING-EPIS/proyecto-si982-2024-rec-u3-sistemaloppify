@@ -47,8 +47,8 @@ jobs:
       - name: Publicar la aplicación
         run: |
           cd LoopifyFinal    # Navega donde está el .sln
-          & "C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/MSBuild.exe" LoopifyFinal.sln /p:Configuration=Release /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageLocation=publish /p:Platform="Any CPU"
-  
+          msbuild LoopifyFinal.sln /p:Configuration=Release /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageLocation=publish /p:Platform="Any CPU"
+ 
   
   deploy:
     runs-on: windows-latest
