@@ -87,11 +87,10 @@ jobs:
             --branch main \
             --manual-integration
         shell: pwsh
-    
       
       - name: Configurar carpeta base en Azure
         run: |
-          az webapp config appsettings set --name ${{ secrets.AZURE_WEBAPP_NAME }} --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --settings SCM_DO_BUILD_DURING_DEPLOYMENT=true PROJECT=LoopifyFinal/LoopifyFinal
+          az webapp config set --name ${{ secrets.AZURE_WEBAPP_NAME }} --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --php-version Off --net-framework-version v4.8 --virtual-application "/LoopifyFinal"
         shell: pwsh
 
             
