@@ -47,7 +47,7 @@ jobs:
       - name: Publicar la aplicación
         run: |
           cd LoopifyFinal/LoopifyFinal
-          & "C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/MSBuild/Current/Bin/MSBuild.exe" LoopifyFinal.csproj /p:Configuration=Release /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageLocation=../../publish
+          & "C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/MSBuild/Current/Bin/MSBuild.exe" LoopifyFinal.csproj /p:Configuration=Release /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageLocation=../../publish /p:Platform="Any CPU"
 
   deploy:
     runs-on: windows-latest

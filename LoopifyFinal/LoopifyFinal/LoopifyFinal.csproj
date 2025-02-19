@@ -26,6 +26,12 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <PackageAsSingleFile>true</PackageAsSingleFile>
+    <DeployOnBuild>true</DeployOnBuild>
+    <WebPublishMethod>Package</WebPublishMethod>
+    <PackageLocation>..\..\publish</PackageLocation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
