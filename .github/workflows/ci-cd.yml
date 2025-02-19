@@ -44,11 +44,16 @@ jobs:
           cd LoopifyFinal
           & 'C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/MSBuild/Current/Bin/MSBuild.exe' LoopifyFinal.sln /p:Configuration="Release" /t:Rebuild /p:Platform="Any CPU"
 
+      - name: Verificar instalación de MSBuild
+        run: |
+          dir "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\"
+        
       - name: Publicar la aplicación
         run: |
           cd LoopifyFinal    # Navega donde está el .sln
-          "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe" LoopifyFinal.sln /p:Configuration=Release /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageLocation=publish /p:Platform="Any CPU"
-        shell: cmd
+          "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe" LoopifyFinal.sln /p:Configuration=Release /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageLocation=publish /p:Platform="Any CPU"
+        
+  
    
   
   deploy:
