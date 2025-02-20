@@ -64,5 +64,5 @@ jobs:
         shell: powershell
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"tomasyoel_automatizacionloopify" /o:"tomasyoel" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-          msbuild LoopifyFinal.sln /t:Rebuild /p:Configuration=Release /p:Platform="Any CPU"
+          msbuild LoopifyFinal/LoopifyFinal.sln /t:Rebuild /p:Configuration=Release /p:Platform="Any CPU"
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
